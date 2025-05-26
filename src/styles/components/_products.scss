@@ -1,0 +1,166 @@
+@use 'sass:color';
+@use '../variables' as *;
+
+.products {
+  background-color: $background-dark;
+  color: $text-color;
+  
+  &__title {
+    text-align: center;
+    color: $text-color;
+    
+    &:after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  
+  &__filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: $spacing-lg;
+    flex-wrap: wrap;
+  }
+  
+  &__filter {
+    padding: 8px 20px;
+    margin: 0 8px 8px 0;
+    background-color: transparent;
+    border: 1px solid rgba($text-color, 0.3);
+    color: $text-color;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: $transition-fast;
+    font-weight: 500;
+    
+    &:hover {
+      border-color: $secondary-color;
+      color: $secondary-color;
+    }
+    
+    &.active {
+      background-color: $secondary-color;
+      border-color: $secondary-color;
+      color: $text-color;
+    }
+  }
+  
+  &__grid {
+    margin-top: $spacing-lg;
+    min-height: 300px; // Ensure grid has height even when empty
+    
+    &--loading {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+  
+  // Loading indicator styles
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-lg 0;
+    margin: $spacing-md 0;
+    min-height: 200px;
+    
+    p {
+      margin-top: $spacing-md;
+      font-size: 1.1rem;
+      color: $secondary-color;
+    }
+    
+    &-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba($text-color, 0.2);
+      border-top: 5px solid $secondary-color;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  &__item {
+    width: calc(33.333% - 20px);
+    margin: 10px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    cursor: pointer;
+    
+    @media (max-width: $breakpoint-lg) {
+      width: calc(50% - 20px);
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      width: calc(100% - 20px);
+    }
+    
+    &-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      transition: $transition-medium;
+    }
+    
+    &-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: $spacing-md;
+      background: linear-gradient(to top, rgba($primary-color, 0.9), transparent);
+      transform: translateY(100%);
+      transition: $transition-medium;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    
+    &-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: $spacing-xs;
+      color: $text-color;
+    }
+    
+    &-category {
+      font-size: 0.9rem;
+      color: $secondary-color;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    &:hover {
+      .products__item-overlay {
+        transform: translateY(0);
+      }
+      
+      .products__item-img {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// Lightbox customization
+.lg-backdrop {
+  background-color: rgba($primary-color, 0.95);
+}
+
+.lg-toolbar, 
+.lg-outer {
+  .lg-icon {
+    color: $text-color;
+    
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+}

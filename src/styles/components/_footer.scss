@@ -1,0 +1,116 @@
+@use 'sass:color';
+@use '../variables' as *;
+
+.footer {
+  background-color: $primary-color;
+  color: $text-color;
+  padding: $spacing-lg 0;
+  
+  &__content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    border-bottom: 1px solid rgba($text-color, 0.1);
+    padding-bottom: $spacing-lg;
+    
+    @media (max-width: $breakpoint-md) {
+      flex-direction: row;
+      gap: $spacing-md;
+    }
+  }
+  
+  &__logo {
+    &-link {
+      font-family: $font-secondary;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $text-color;
+      display: inline-block;
+      margin-bottom: $spacing-sm;
+    }
+  }
+  
+  &__tagline {
+    color: rgba($text-color, 0.7);
+    margin-bottom: $spacing-md;
+  }
+  
+  &__links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: $spacing-xl;
+    
+    @media (max-width: $breakpoint-sm) {
+      justify-content: space-between;
+      width: 100%;
+      gap: $spacing-lg;
+    }
+  }
+  
+  &__links-title {
+    font-size: 1.2rem;
+    margin-bottom: $spacing-md;
+    color: $secondary-color;
+  }
+  
+  &__links-list {
+    list-style: none;
+    
+    li {
+      margin-bottom: $spacing-xs;
+      
+      a {
+        color: rgba($text-color, 0.7);
+        transition: $transition-fast;
+        
+        &:hover {
+          color: $secondary-color;
+        }
+      }
+    }
+  }
+  
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: row;
+      gap: $spacing-sm;
+      text-align: center;
+    }
+  }
+  
+  &__copyright {
+    color: rgba($text-color, 0.7);
+    font-size: 0.9rem;
+  }
+  
+  &__social {
+    display: flex;
+    gap: $spacing-sm;
+    
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba($text-color, 0.1);
+      color: $text-color;
+      transition: $transition-fast;
+      
+      &:hover {
+        background-color: $secondary-color;
+        transform: translateY(-3px);
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+// Colors
+$primary-color: #1a1a1a; // Mat-siyah
+$secondary-color: #d3a95c; // Gold accent for glow effects
+$text-color: #f5f5f5;
+$text-dark: #333333;
+$background-light: #f8f8f8;
+$background-dark: #121212;
+$accent-color: #e0e0e0;
+
+// Typography
+$font-primary: 'Montserrat', sans-serif;
+$font-secondary: 'Playfair Display', serif;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 2rem;
+$spacing-lg: 4rem;
+$spacing-xl: 8rem;
+
+// Transitions
+$transition-fast: 0.3s ease;
+$transition-medium: 0.5s ease;
+$transition-slow: 0.8s ease;
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+// Z-indices
+$z-navbar: 1000;
+$z-modal: 2000;
+$z-tooltip: 3000;
+$z-floating-button: 900;

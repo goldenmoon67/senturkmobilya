@@ -1,0 +1,173 @@
+/* Import SASS modules */
+@use 'sass:color';
+@use 'variables' as *;
+
+/* Import component styles */
+@forward 'components/navbar';
+@forward 'components/hero';
+@forward 'components/about';
+@forward 'components/products';
+@forward 'components/social';
+@forward 'components/testimonials';
+@forward 'components/contact';
+
+/* External CSS libraries are now imported in vendor.css */
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; // For navbar offset when scrolling to sections
+}
+
+body {
+  font-family: $font-primary;
+  color: $text-dark;
+  background-color: $background-light;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: $transition-fast;
+  
+  &:hover {
+    color: $secondary-color;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-secondary;
+  margin-bottom: $spacing-md;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 3.5rem;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: 2.5rem;
+  }
+}
+
+h2 {
+  font-size: 2.5rem;
+  position: relative;
+  display: inline-block;
+  margin-bottom: $spacing-lg;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: $secondary-color;
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: 2rem;
+  }
+}
+
+section {
+  padding: $spacing-xl 0;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: $transition-fast;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  
+  &--primary {
+    background-color: $secondary-color;
+    color: $text-color;
+    
+    &:hover {
+      background-color: color.scale($secondary-color, $lightness: -10%);
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+  }
+  
+  &--outline {
+    background-color: transparent;
+    border: 2px solid $secondary-color;
+    color: $secondary-color;
+    
+    &:hover {
+      background-color: $secondary-color;
+      color: $text-color;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Focus styles for accessibility
+:focus-visible {
+  outline: 3px solid $secondary-color;
+  outline-offset: 2px;
+}
+
+// Utility classes
+.text-center {
+  text-align: center;
+}
+
+.mb-1 {
+  margin-bottom: $spacing-xs;
+}
+
+.mb-2 {
+  margin-bottom: $spacing-sm;
+}
+
+.mb-3 {
+  margin-bottom: $spacing-md;
+}
+
+.mb-4 {
+  margin-bottom: $spacing-lg;
+}
+
+.mt-1 {
+  margin-top: $spacing-xs;
+}
+
+.mt-2 {
+  margin-top: $spacing-sm;
+}
+
+.mt-3 {
+  margin-top: $spacing-md;
+}
+
+.mt-4 {
+  margin-top: $spacing-lg;
+}

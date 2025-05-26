@@ -1,0 +1,154 @@
+@use 'sass:color';
+@use '../variables' as *;
+
+.hero {
+  height: 100vh;
+  background-color: $primary-color;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    z-index: 1;
+    
+    &-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+      
+      @media (max-width: $breakpoint-md) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(0.5) brightness(0.7);
+      }
+    }
+  }
+  
+  &__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    padding: 0 $spacing-md;
+  }
+  
+  &__title {
+    font-size: 4.5rem;
+    color: $text-color;
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba($secondary-color, 0.5);
+    
+    // Glow effect
+    animation: glow 3s ease-in-out infinite alternate;
+    
+    @media (max-width: $breakpoint-md) {
+      font-size: 3rem;
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      font-size: 2.5rem;
+    }
+  }
+  
+  &__subtitle {
+    font-size: 1.5rem;
+    color: $text-color;
+    margin-bottom: $spacing-lg;
+    font-weight: 300;
+    opacity: 0.9;
+    
+    @media (max-width: $breakpoint-sm) {
+      font-size: 1.2rem;
+    }
+  }
+  
+  &__cta {
+    margin-top: $spacing-md;
+  }
+  
+  // Scroll indicator
+  &__scroll {
+    position: absolute;
+    bottom: $spacing-md;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $text-color;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    transition: $transition-fast;
+    
+    &:hover {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-5px);
+    }
+    
+    &-text {
+      margin-bottom: $spacing-xs;
+    }
+    
+    &-icon {
+      width: 30px;
+      height: 50px;
+      border: 2px solid $text-color;
+      border-radius: 15px;
+      position: relative;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 6px;
+        height: 6px;
+        background-color: $text-color;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        animation: scrollDown 2s infinite;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px rgba($secondary-color, 0.5), 0 0 10px rgba($secondary-color, 0.3);
+  }
+  to {
+    text-shadow: 0 0 10px rgba($secondary-color, 0.8), 0 0 20px rgba($secondary-color, 0.5), 0 0 30px rgba($secondary-color, 0.3);
+  }
+}
+
+@keyframes scrollDown {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+}
