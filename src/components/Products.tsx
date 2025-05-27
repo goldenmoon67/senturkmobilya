@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface Product {
@@ -14,6 +14,24 @@ interface Product {
 const Products = () => {
   const [filterKey, setFilterKey] = useState<string>('*');
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Mobil cihaz kontrolü
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // İlk yükleme kontrolü
+    checkIfMobile();
+    
+    // Ekran boyutu değiştiğinde kontrol et
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
 
   // Sample product data
   const products: Product[] = [
@@ -222,29 +240,35 @@ const Products = () => {
                   transform: 'translateY(0)'
                 }}
                 onMouseEnter={(e) => {
-                  const target = e.currentTarget;
-                  target.style.transform = 'translateY(-10px)';
-                  target.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
-                  const infoElement = target.querySelector('.product-info') as HTMLElement;
-                  if (infoElement) {
-                    infoElement.style.opacity = '1';
-                    infoElement.style.transform = 'translateY(0)';
+                  // Mobil cihazda hover efektini uygulama
+                  if (!isMobile) {
+                    const target = e.currentTarget;
+                    target.style.transform = 'translateY(-10px)';
+                    target.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
+                    const infoElement = target.querySelector('.product-info') as HTMLElement;
+                    if (infoElement) {
+                      infoElement.style.opacity = '1';
+                      infoElement.style.transform = 'translateY(0)';
+                    }
                   }
                 }}
                 onMouseLeave={(e) => {
-                  const target = e.currentTarget;
-                  target.style.transform = 'translateY(0)';
-                  target.style.boxShadow = '0 15px 30px rgba(0,0,0,0.25)';
-                  const infoElement = target.querySelector('.product-info') as HTMLElement;
-                  if (infoElement) {
-                    infoElement.style.opacity = '0';
-                    infoElement.style.transform = 'translateY(20px)';
+                  // Mobil cihazda hover efektini uygulama
+                  if (!isMobile) {
+                    const target = e.currentTarget;
+                    target.style.transform = 'translateY(0)';
+                    target.style.boxShadow = '0 15px 30px rgba(0,0,0,0.25)';
+                    const infoElement = target.querySelector('.product-info') as HTMLElement;
+                    if (infoElement) {
+                      infoElement.style.opacity = '0';
+                      infoElement.style.transform = 'translateY(20px)';
+                    }
                   }
                 }}
               >
                 <div className="product-image-container" style={{
                   position: 'relative',
-                  paddingTop: '100%', // Kare oran için
+                  paddingTop: '177.78%', // 9:16 oranı için
                   overflow: 'hidden',
                   borderRadius: '12px 12px 0 0'
                 }}>
@@ -277,8 +301,8 @@ const Products = () => {
                   padding: '20px',
                   background: 'linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent)',
                   color: 'white',
-                  opacity: '0',
-                  transform: 'translateY(20px)',
+                  opacity: isMobile ? '1' : '0',
+                  transform: isMobile ? 'translateY(0)' : 'translateY(20px)',
                   transition: 'all 0.4s ease',
                   display: 'flex',
                   flexDirection: 'column',
