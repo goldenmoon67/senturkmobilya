@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --background-dark: #121212;
+  --background-dark-transparent: #121212;
+  --navbar-light: #ffffff;
+  --navbar-dark: #121212;
+  --text-light: #171717;
+  --text-dark: #ffffff;
+  --accent-color: #d3a95c;
 }
 
 @theme inline {
@@ -16,6 +23,13 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --background-dark: #121212;
+    --background-dark-transparent: #121212;
+    --navbar-light: #ffffff;
+    --navbar-dark: #121212;
+    --text-light: #171717;
+    --text-dark: #ffffff;
+    --accent-color: #d3a95c;
   }
 }
 
