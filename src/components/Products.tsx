@@ -15,6 +15,12 @@ const Products = () => {
   const [filterKey, setFilterKey] = useState<string>('*');
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   
   // Mobil cihaz kontrolü
   useEffect(() => {
@@ -280,7 +286,8 @@ const Products = () => {
                     style={{
                       objectFit: 'cover',
                       objectPosition: 'center',
-                      transition: 'transform 0.5s ease'
+                      transition: 'transform 0.5s ease',
+                      cursor: 'pointer'
                     }}
                     onMouseEnter={(e) => {
                       const target = e.currentTarget as HTMLElement;
@@ -289,6 +296,11 @@ const Products = () => {
                     onMouseLeave={(e) => {
                       const target = e.currentTarget as HTMLElement;
                       target.style.transform = 'scale(1)';
+                    }}
+                    onClick={() => {
+                      setSelectedImage(product.image);
+                      setIsImageViewerOpen(true);
+                      document.body.style.overflow = 'hidden'; // Arka planın kaydırılmasını engelle
                     }}
                   />
                 </div>
@@ -353,6 +365,239 @@ const Products = () => {
         )}
       </div>
     </div>
+
+    {/* Zoom Özelliği Olan Photo Viewer */}
+    {isImageViewerOpen && selectedImage && (
+      <div 
+        className="image-viewer-overlay"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 9999,
+          padding: '20px',
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+        onClick={() => {
+          if (zoomLevel === 1) {
+            setIsImageViewerOpen(false);
+            document.body.style.overflow = 'auto';
+            // Reset zoom ve pan değerlerini sıfırla
+            setZoomLevel(1);
+            setPanPosition({ x: 0, y: 0 });
+          }
+        }}
+      >
+        <div 
+          className="image-viewer-container"
+          style={{
+            position: 'relative',
+            width: '100%',
+            maxWidth: '1000px',
+            maxHeight: '90vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+          onClick={(e) => e.stopPropagation()}
+          onWheel={(e) => {
+            e.preventDefault();
+            // Zoom in/out için tekerlek olayını yakala
+            const delta = e.deltaY * -0.01;
+            const newZoom = Math.min(Math.max(zoomLevel + delta, 1), 5); // Zoom seviyesini 1x ile 5x arasında sınırla
+            setZoomLevel(newZoom);
+          }}
+          onMouseDown={(e) => {
+            // Sadece zoom yapılmışsa sürüklemeye izin ver
+            if (zoomLevel > 1) {
+              setIsDragging(true);
+              setDragStart({ x: e.clientX, y: e.clientY });
+            }
+          }}
+          onMouseMove={(e) => {
+            if (isDragging && zoomLevel > 1) {
+              // Sürükleme sırasında pan pozisyonunu güncelle
+              const dx = e.clientX - dragStart.x;
+              const dy = e.clientY - dragStart.y;
+              setPanPosition({
+                x: panPosition.x + dx,
+                y: panPosition.y + dy
+              });
+              setDragStart({ x: e.clientX, y: e.clientY });
+            }
+          }}
+          onMouseUp={() => {
+            setIsDragging(false);
+          }}
+          onMouseLeave={() => {
+            setIsDragging(false);
+          }}
+        >
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '80vh',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: `translate(-50%, -50%) translate(${panPosition.x}px, ${panPosition.y}px) scale(${zoomLevel})`,
+              transformOrigin: 'center',
+              transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+              width: '100%',
+              height: '100%'
+            }}>
+              <Image 
+                src={selectedImage} 
+                alt="Ürün Görseli"
+                fill
+                sizes="100vw"
+                style={{
+                  objectFit: 'contain',
+                  objectPosition: 'center'
+                }}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()} // Resmin sürüklenmesini engelle
+              />
+            </div>
+          </div>
+          
+          {/* Zoom Kontrolleri */}
+          <div style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            padding: '8px 15px',
+            borderRadius: '30px',
+            gap: '15px'
+          }}>
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                color: 'white',
+                border: 'none',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '18px',
+                opacity: zoomLevel <= 1 ? 0.5 : 1
+              }}
+              onClick={() => {
+                const newZoom = Math.max(zoomLevel - 0.5, 1);
+                setZoomLevel(newZoom);
+                if (newZoom === 1) {
+                  setPanPosition({ x: 0, y: 0 });
+                }
+              }}
+              disabled={zoomLevel <= 1}
+            >
+              -
+            </button>
+            
+            <span style={{ color: 'white', fontSize: '14px' }}>
+              {Math.round(zoomLevel * 100)}%
+            </span>
+            
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                color: 'white',
+                border: 'none',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '18px',
+                opacity: zoomLevel >= 5 ? 0.5 : 1
+              }}
+              onClick={() => {
+                setZoomLevel(Math.min(zoomLevel + 0.5, 5));
+              }}
+              disabled={zoomLevel >= 5}
+            >
+              +
+            </button>
+            
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                marginLeft: '5px',
+                opacity: zoomLevel === 1 ? 0.5 : 1
+              }}
+              onClick={() => {
+                setZoomLevel(1);
+                setPanPosition({ x: 0, y: 0 });
+              }}
+              disabled={zoomLevel === 1}
+            >
+              Sıfırla
+            </button>
+          </div>
+          
+          <button 
+            className="image-viewer-close-button"
+            style={{
+              position: 'absolute',
+              top: '15px',
+              right: '15px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              border: 'none',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              zIndex: 10,
+              fontSize: '20px'
+            }}
+            onClick={() => {
+              setIsImageViewerOpen(false);
+              document.body.style.overflow = 'auto';
+              // Reset zoom ve pan değerlerini sıfırla
+              setZoomLevel(1);
+              setPanPosition({ x: 0, y: 0 });
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(211, 169, 92, 0.8)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    )}
     </section>
   );
 };
